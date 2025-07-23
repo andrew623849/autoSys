@@ -30,59 +30,59 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= "<?= " ?>Html::encode($this->title) ?></h1>
 
     <p>
-        <?= "<?= " ?>Html::a(<?= $generator->generateString('新增 ' . Inflector::camel2words(StringHelper::basename($generator->modelClass))) ?>, ['create'], ['class' => 'btn btn-success']) ?>
+        <?= "<?= " ?>Html::a(<?= $generator->generateString('新增') ?>, ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-<?= $generator->enablePjax ? "    <?php Pjax::begin(); ?>\n" : '' ?>
-<?php if(!empty($generator->searchModelClass)): ?>
-<?= "    <?php " . ($generator->indexWidgetType === 'grid' ? "// " : "") ?>echo $this->render('_search', ['model' => $searchModel]); ?>
-<?php endif; ?>
+    <?= $generator->enablePjax ? "    <?php Pjax::begin(); ?>\n" : '' ?>
+    <?php if (!empty($generator->searchModelClass)): ?>
+        <?= "    <?php " . ($generator->indexWidgetType === 'grid' ? "// " : "") ?>echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php endif; ?>
 
-<?php if ($generator->indexWidgetType === 'grid'): ?>
-    <?= "<?= " ?>GridView::widget([
+    <?php if ($generator->indexWidgetType === 'grid'): ?>
+        <?= "<?= " ?>GridView::widget([
         'dataProvider' => $dataProvider,
         <?= !empty($generator->searchModelClass) ? "'filterModel' => \$searchModel,\n        'columns' => [\n" : "'columns' => [\n"; ?>
-            ['class' => 'yii\grid\SerialColumn'],
+        ['class' => 'yii\grid\SerialColumn'],
 
-<?php
-$count = 0;
-if (($tableSchema = $generator->getTableSchema()) === false) {
-    foreach ($generator->getColumnNames() as $name) {
-        if (++$count < 6) {
-            echo "            '" . $name . "',\n";
+        <?php
+        $count = 0;
+        if (($tableSchema = $generator->getTableSchema()) === false) {
+            foreach ($generator->getColumnNames() as $name) {
+                if (++$count < 6) {
+                    echo "            '" . $name . "',\n";
+                } else {
+                    echo "            //'" . $name . "',\n";
+                }
+            }
         } else {
-            echo "            //'" . $name . "',\n";
+            foreach ($tableSchema->columns as $column) {
+                $format = $generator->generateColumnFormat($column);
+                if (++$count < 6) {
+                    echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+                } else {
+                    echo "            //'" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+                }
+            }
         }
-    }
-} else {
-    foreach ($tableSchema->columns as $column) {
-        $format = $generator->generateColumnFormat($column);
-        if (++$count < 6) {
-            echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-        } else {
-            echo "            //'" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
+        ?>
+        [
+        'class' => ActionColumn::className(),
+        'urlCreator' => function ($action, <?= $modelClass ?> $model, $key, $index, $column) {
+        return Url::toRoute([$action, <?= $generator->generateUrlParams() ?>]);
         }
-    }
-}
-?>
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, <?= $modelClass ?> $model, $key, $index, $column) {
-                    return Url::toRoute([$action, <?= $generator->generateUrlParams() ?>]);
-                 }
-            ],
         ],
-    ]); ?>
-<?php else: ?>
-    <?= "<?= " ?>ListView::widget([
+        ],
+        ]); ?>
+    <?php else: ?>
+        <?= "<?= " ?>ListView::widget([
         'dataProvider' => $dataProvider,
         'itemOptions' => ['class' => 'item'],
         'itemView' => function ($model, $key, $index, $widget) {
-            return Html::a(Html::encode($model-><?= $generator->getNameAttribute() ?>), ['view', <?= $generator->generateUrlParams() ?>]);
+        return Html::a(Html::encode($model-><?= $generator->getNameAttribute() ?>), ['view', <?= $generator->generateUrlParams() ?>]);
         },
-    ]) ?>
-<?php endif; ?>
+        ]) ?>
+    <?php endif; ?>
 
-<?= $generator->enablePjax ? "    <?php Pjax::end(); ?>\n" : '' ?>
+    <?= $generator->enablePjax ? "    <?php Pjax::end(); ?>\n" : '' ?>
 
 </div>
