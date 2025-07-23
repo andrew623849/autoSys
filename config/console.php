@@ -6,7 +6,7 @@ $db = require __DIR__ . '/db.php';
 $config = [
     'id' => 'basic-console',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log','gii'],
+    'bootstrap' => ['log', 'gii'],
     'controllerNamespace' => 'app\commands',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
@@ -20,13 +20,13 @@ $config = [
                 'model' => [
                     'class' => 'yii\gii\generators\model\Generator',
                     'templates' => [
-                        'custom' => '@app/gii-templates/model', // 自定義模板路徑
+                        'custom' => '@app/gii-template/model', // 自定義模板路徑
                     ],
                 ],
                 'crud' => [
                     'class' => 'yii\gii\generators\crud\Generator',
                     'templates' => [
-                        'custom' => '@app/gii-templates/crud1', // 自定義模板路徑
+                        'custom' => '@app/gii-template/crud1', // 自定義模板路徑
                     ],
                 ],
             ],

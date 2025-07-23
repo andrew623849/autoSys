@@ -41,6 +41,13 @@ $config = [
                 ],
             ],
         ],
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+                '<plan:\w+>/<controller:\w+>/<action:\w+>' => '<plan>/<controller>/<action>',
+            ],
+        ],
         'db' => $db,
         /*
         'urlManager' => [
